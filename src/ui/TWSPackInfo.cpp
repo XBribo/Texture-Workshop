@@ -6,8 +6,6 @@ bool TWSPackInfo::init(TWSPack* tp)
     if (!Popup::init(335.f, 231.f, "TWS_Box.png"_spr))
         return false;
 
-    int reloadIconTries = 0;
-
     texturePack = tp;
     texturePack->info = this;
 
@@ -15,17 +13,17 @@ bool TWSPackInfo::init(TWSPack* tp)
 
     LazySprite* icon = LazySprite::create({100, 100});
     icon->setLoadCallback(
-        [this, &reloadIconTries, tp, icon](Result<> result) {
+        [this, tp, icon, reloadIconTries = 0](Result<> result) mutable {
             if (!result.isOk()) 
             {
                 if (reloadIconTries < 3) {
-                    log::info("failed to load icon, please refresh this TWS page to try again."); 
-                    // fallback
-                    icon->initWithSpriteFrameName("TWS_Error.png"_spr);
-                } else {
-                    icon->loadFromUrl(tp->IconURL, geode::LazySprite::Format::kFmtPng);
                     reloadIconTries += 1;
+                    icon->loadFromUrl(tp->IconURL, geode::LazySprite::Format::kFmtPng);
+                } else {
+                    log::info("failed to load icon, please refresh this TWS page to try again.");
+                    icon->initWithSpriteFrameName("TWS_Error.png"_spr);
                 }
+                return;
             }
 
             if (tp->featured) {

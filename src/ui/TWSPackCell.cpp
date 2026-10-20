@@ -11,8 +11,6 @@ bool TWSPackCell::init(TWSPack* tp, bool other) {
 
     lighterColor = other;
 
-    int reloadIconTries = 0;
-
     if (lighterColor) {
         this->setOpacity(100);
     } else {
@@ -27,17 +25,17 @@ bool TWSPackCell::init(TWSPack* tp, bool other) {
     // thank you geode lead developers for the awesome creation that is lazy sprite, i love you so much. mwah.
     icon = geode::LazySprite::create({100, 100});
     icon->setLoadCallback(
-        [this, &reloadIconTries, tp](Result<> result) {
+        [this, tp, reloadIconTries = 0](Result<> result) mutable {
             if (!result.isOk()) 
             {
                 if (reloadIconTries < 3) {
-                    log::info("failed to load icon, please refresh this TWS page to try again."); 
-                    // fallback
-                    icon->initWithSpriteFrameName("TWS_Error.png"_spr);
-                } else {
-                    icon->loadFromUrl(tp->IconURL, geode::LazySprite::Format::kFmtPng);
                     reloadIconTries += 1;
+                    icon->loadFromUrl(tp->IconURL, geode::LazySprite::Format::kFmtPng);
+                } else {
+                    log::info("failed to load icon, please refresh this TWS page to try again.");
+                    icon->initWithSpriteFrameName("TWS_Error.png"_spr);
                 }
+                return;
             }
 
             if (texturePack->featured) {

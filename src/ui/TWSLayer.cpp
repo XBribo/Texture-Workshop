@@ -1,6 +1,7 @@
 using namespace geode::prelude;
 
 #include "headers/TWSLayer.hpp"
+#include <Geode/cocos/extensions/GUI/CCControlExtension/CCScale9Sprite.h>
 #include "headers/TWSPackCell.hpp"
 #include "../tps/headers/TWSPack.hpp"
 #include "../header/boobs.hpp"
@@ -405,6 +406,7 @@ void TWSLayer::getTexturePacks(std::string searchQuery) {
 
     if (errorText) {
         outline->removeChild(errorText, true);
+        errorText = nullptr;
     }
 
     //if (nextPage && nextPage->isVisible()) nextPage->setVisible(false);

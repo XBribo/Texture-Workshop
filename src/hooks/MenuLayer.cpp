@@ -7,6 +7,7 @@ using namespace geode::prelude;
 #include "../header/boobs.hpp"
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Mod.hpp>
+#include <Geode/utils/NodeIDs.hpp>
 
 class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
@@ -14,12 +15,17 @@ class $modify(MyMenuLayer, MenuLayer) {
 			return false;
 		}
 
+		NodeIDs::provideFor(this);
+		auto menu = this->getChildByID("right-side-menu");
+		if (!menu) {
+			log::warn("Unable to find right-side-menu");
+			return true;
+		}
 		auto wsButton = CCMenuItemSpriteExtra::create(
 			CCSprite::createWithSpriteFrameName("TWS_MainButton.png"_spr),
 			this,
 			menu_selector(MyMenuLayer::onMyButton)
 		);
-		auto menu = this->getChildByID("right-side-menu");
 		menu->addChild(wsButton);
 		wsButton->setID("workshop-button"_spr);
 		menu->updateLayout();

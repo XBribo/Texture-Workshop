@@ -1,4 +1,5 @@
 #include "./headers/TWSFilters.hpp"
+#include <Geode/cocos/extensions/GUI/CCControlExtension/CCScale9Sprite.h>
 #include "./headers/TWSLayer.hpp"
 #include "../header/boobs.hpp"
 
